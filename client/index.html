@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--List of icons https://material.io/resources/icons/?style=baseline -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <link href="node_modules/vuetify/dist/vuetify.min.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <script type="text/x-template" id="a-template">
+  </script>
+
+  <script type="text/x-template" id="registerUser-template">
+  <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card class="elevation-12">
+            <v-toolbar color="primary" dark flat>
+              <v-toolbar-title>Register User</v-toolbar-title>
+              <v-spacer />
+            </v-toolbar>
+            <v-card-text>
+              <v-form @submit.prevent="submit">
+                <v-container>
+                  <v-text-field prepend-icon="account_box" v-model="registerUserDetails.name" label="Name" required></v-text-field>
+                  <v-text-field prepend-icon="email" v-model="registerUserDetails.email" label="E-mail" required></v-text-field>
+                  <v-text-field prepend-icon="lock" v-model="registerUserDetails.password" label="Password" required></v-text-field>
+                  <v-text-field prepend-icon="eco" v-model="registerUserDetails.deviceId" label="CO2 Monitor Device ID" required></v-text-field>
+                  <v-btn class="blue" type="submit">Register</v-btn>
+                </v-container>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+      
+      <ul>
+        <li v-for="index in progressIndex" :key="index">
+          {{ loginProgress[index - 1] }}
+        </li>
+      </ul>
+      
+      <!--<v-btn @click="testProgress">test</v-btn>-->
+    </v-container>
+   
+  </script>
+  
+  <script type="text/x-template" id="home-template">
+
+    <v-content>
+      <v-jumbotron color="grey lighten-2">
+        <v-container fill-height>
+          <v-layout align-center>
+            <v-flex>
+              <h3 class="display-3 text-center">Save the earth! Join us to reduce carbon footprint!</h3>
+
+              <span class="headline text-center">
+                City of New York is calling all the citizens to participate in a one
+                of a kind, innovative project to reduce carbon footprint. This amazing
+                project is a grassroot, bottom-up collaboration between government and citizens 
+                for mutual benefits and for making the Earth safe place to our future generations!
+              </span>
+
+              <v-divider class="my-3"></v-divider>
+
+              <div class="title mb-3">Are you a Citizen?</div>
+
+              <v-btn large class="pa-12" color="primary" to="/loginUser">Login</v-btn>
+
+              <span class="ml-12">
+                First time User?
+              </span>
+
+              <v-btn class="pa-3" color="success" to="/registerUser">Register</v-btn>
+
+              <v-divider class="my-3"></v-divider>
+
+              <div class="title mb-3">Are you a Government Official?</div>
+
+              <v-btn large class="pa-12 mr-12" color="primary" to="/loginGov">Login</v-btn>
+              <v-btn large class="pa-12 mr-12" color="success" to="/loginGov">Reports</v-btn>
+              <v-btn large class="pa-12 mr-12" color="success" to="/loginGov">Analytics</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-jumbotron>
+  </script>
+
+  <script type="text/x-template" id="loginUser-template">
+    <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card class="elevation-12">
+            <v-toolbar color="primary" dark flat>
+              <v-toolbar-title>User Login</v-toolbar-title>
+              <v-spacer />
+            </v-toolbar>
+            <v-card-text>
+              <v-form @submit.prevent="submit">
+                <v-container>
+                  <v-text-field prepend-icon="email" v-model="loginUserDetails.email" label="E-mail" required></v-text-field>
+                  <v-text-field prepend-icon="lock" :type="'password'" v-model="loginUserDetails.password" label="Password" required></v-text-field>
+                  <v-btn class="green" type="submit">Login</v-btn>
+                  <v-btn class="blue float-right" to="/registerUser">Register</v-btn>
+                </v-container>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </script>
+
+  <script type="text/x-template" id="loginGov-template">
+    <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card class="elevation-12">
+            <v-toolbar color="primary" dark flat>
+              <v-toolbar-title>Government Login</v-toolbar-title>
+              <v-spacer />
+            </v-toolbar>
+            <v-card-text>
+              <v-form @submit.prevent="submit">
+                <v-container>
+                  <v-text-field prepend-icon="email" v-model="loginGovDetails.email" label="E-mail" required></v-text-field>
+                  <v-text-field prepend-icon="lock" :type="'password'" v-model="loginGovDetails.password" label="Password" required></v-text-field>
+                  <v-btn class="green" type="submit">Login</v-btn>
+                </v-container>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </script>
+
+  <script type="text/x-template" id="userDashboard-template">
+    <v-container fluid grid-list-xl>
+      <v-layout>
+        <v-flex>
+          <h1>Dashboard</h1>
+          <v-layout row center>
+            <v-flex md3>
+              <v-card class="mx-auto" max-width="344">
+                <v-card-text>
+                  <p class="display-3 orange--text text-center">
+                    {{store.state.accountInfo.carbos}}
+                  </p>
+                  <p class="display-1 text--primary text-center">
+                    carbos
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex md3>
+              <v-card class="mx-auto" max-width="344">
+                <v-card-text>
+                  <p v-show="store.state.accountInfo.carbos > 0" class="display-3 blue--text text-center">
+                    253,781
+                  </p>
+                  <p v-show="store.state.accountInfo.carbos == 0" class="display-3 blue--text text-center">
+                    0
+                  </p>
+                  <p class="display-1 text--primary text-center">
+                    metrics measured
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex md3>
+              <v-card class="mx-auto" max-width="344">
+                <v-card-text>
+                  <p v-show="store.state.accountInfo.carbos > 0" class="display-3 green--text text-center">
+                    254 miles
+                  </p>
+                  <p v-show="store.state.accountInfo.carbos == 0" class="display-3 green--text text-center">
+                    0 miles
+                  </p>
+                  <p class="display-1 text--primary text-center">
+                    of land covered
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex md3>
+              <v-card class="mx-auto" max-width="344">
+                <v-card-text>
+                  <p v-show="store.state.accountInfo.carbos > 0" class="display-3 red--text text-center">
+                    28 days
+                  </p>
+                  <p v-show="store.state.accountInfo.carbos == 0" class="display-3 red--text text-center">
+                    0 days
+                  </p>
+                  <p class="display-1 text--primary text-center">
+                    of monitoring
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+
+      <v-divider class="my-3"></v-divider>
+      
+      <div class="headline text-center">Exchange Carbos into other Currencies!</div>
+
+      <v-layout row>
+        <v-flex m2></v-flex>
+        <v-flex m4>
+          <p class="title mb-3 text--primary text-center">
+            Exchange Rate: 1 CarboCoin = 1.2 Ethereum
+          </p>
+        </v-flex>
+        <v-flex m4>
+          <v-btn color="primary">Get Ethereum</v-btn>
+        </v-flex>
+        <v-flex m2></v-flex>
+      </v-layout>
+      <v-layout row>
+        <v-flex m2></v-flex>
+        <v-flex m4>
+          <p class="title mb-3 text--primary text-center">
+            Exchange Rate: 1 CarboCoin = 0.8 Ripple
+          </p>
+        </v-flex>
+        <v-flex m4>
+          <v-btn color="primary">Get Ripple</v-btn>
+        </v-flex>
+        <v-flex m2></v-flex>
+      </v-layout>
+      <v-layout row>
+        <v-flex m2></v-flex>
+        <v-flex m4>
+          <p class="title mb-3 text--primary text-center">
+            Exchange Rate: 1 CarboCoin = 0.9 Bitcoin
+          </p>
+        </v-flex>
+        <v-flex m4>
+          <v-btn color="primary">Get Bitcoin</v-btn>
+        </v-flex>
+        <v-flex m2></v-flex>
+      </v-layout>
+      <v-layout row>
+        <v-flex m2></v-flex>
+        <v-flex m4>
+          <p class="title mb-3 text--primary text-center">
+            Exchange Rate: 1 CarboCoin = $2.35
+          </p>
+        </v-flex>
+        <v-flex m4>
+          <v-btn class="center" color="primary">Get Dollars</v-btn>
+        </v-flex>
+        <v-flex m2></v-flex>
+      </v-layout>
+    </v-container>
+  </script>
+
+  <script type="text/x-template" id="govDashboard-template">
+    <v-container fluid grid-list-xl>
+      <v-layout>
+        <v-flex>
+          <h1>Dashboard</h1>
+          <v-layout row>
+            <v-flex md1></v-flex>
+            <v-flex md6>
+              <v-img :src="currentMapSrc" width="700px"></v-img>
+              <v-img src="https://i.imgur.com/xtSLaSN.png" width="700px"></v-img>
+            </v-flex>
+            <v-flex md4>
+              <v-layout row>
+                <v-flex md6>
+                  <v-card class="mx-auto" max-width="344">
+                    <v-card-text>
+                      <p class="display-3 green--text text-center">
+                        546
+                      </p>
+                      <p class="display-1 text--primary text-center">
+                        active monitors
+                      </p>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex md6>
+                  <v-card class="mx-auto" max-width="344">
+                    <v-card-text>
+                      <p class="display-3 orange--text text-center">
+                        672,894
+                      </p>
+                      <p class="display-1 text--primary text-center">
+                        carbos given
+                      </p>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex md12>
+                  <v-card class="mx-auto">
+                    <v-card-text>
+                      <p class="display-1 text--primary text-center">
+                        Carbon Timeline
+                      </p>
+                      <v-sparkline :smooth="16" :gradient="['red', 'orange', 'yellow']" :line-width="3" :value="value" auto-draw-duration="10000" auto-draw stroke-linecap="round"></v-sparkline>
+                      <div class="red--text">
+                        Last updated: February 14, 2020
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+            <v-flex md1></v-flex>
+          </v-layout>
+
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </script>
+
+  <script type="text/x-template" id="redeem-template">
+    <v-container fluid grid-list-xl>
+      <v-layout>
+        <v-flex>
+          <h1>Redeem</h1>
+
+          <v-container fluid>
+            <v-row dense>
+              <v-col v-for="prize in prizes" :key="prize.name" :cols="prize.flex">
+                <v-card>
+                  <v-img :src="prize.src" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px" contain>
+                    <v-card-title v-text="prize.name"></v-card-title>
+                  </v-img>
+
+                  <v-card-actions>
+                    <v-chip class="ma-2" color="green" text-color="white">
+                      <v-avatar left class="green darken-4">
+                        {{prize.price}}
+                      </v-avatar>
+                      carbos
+                    </v-chip>
+                    <v-spacer></v-spacer>
+
+                    <v-checkbox v-model="selectedPrizes" :value="prize"></v-checkbox>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+
+
+          <v-fab-transition>
+            <v-btn v-show="checkoutHidden" @click="checkoutPrizes" color="red" fab dark fixed large bottom right>
+              <v-badge top color="green">
+                <span slot="badge">{{total}}</span>
+                <v-icon>shopping_cart</v-icon>
+              </v-badge>
+            </v-btn>
+          </v-fab-transition>
+
+          <v-snackbar v-model="snackbar">
+            {{ text }}
+            <v-btn color="pink" text @click="snackbar = false">
+              Close
+            </v-btn>
+          </v-snackbar>
+
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </script>
+
+</head>
+
+<body>
+  <!-- <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>Hello world 1</v-container>
+      </v-content>
+    </v-app>
+  </div> -->
+
+  <div id="app">
+    <v-app id="inspire">
+      <v-navigation-drawer v-model="leftDrawer" app>
+        <v-list dense>
+          <v-list-item to="/">
+            <v-list-item-action>
+              <v-icon>home</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Home</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        <!--  <v-list-item @click="clearDB">-->
+        <!--    <v-list-item-action>-->
+        <!--      <v-icon>build</v-icon>-->
+        <!--    </v-list-item-action>-->
+        <!--    <v-list-item-content>-->
+        <!--      <v-list-item-title>Clear Database</v-list-item-title>-->
+        <!--    </v-list-item-content>-->
+        <!--  </v-list-item>-->
+        <!--</v-list>-->
+      </v-navigation-drawer>
+
+      <v-app-bar app color="indigo" dark>
+        <v-app-bar-nav-icon @click.stop="leftDrawer = !leftDrawer"></v-app-bar-nav-icon>
+        <!--<router-link to="/"><v-toolbar-title>XCarbon</v-toolbar-title><router-link>-->
+
+        <v-toolbar-title>
+          <router-link id="title" to="/">
+            XCarbon
+          </router-link>
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+        <v-chip v-if='store.state.user && store.state.user.type !== "gov"' class="ma-2" color="orange" text-color="white">
+          <v-avatar left class="orange darken-4">
+            {{store.state.accountInfo.carbos}}
+          </v-avatar>
+          Carbos
+        </v-chip>
+        <div v-if='store.state.user'>Welcome {{store.state.user.name}}!</div>
+        <v-btn v-if='store.state.user && store.state.user.type !== "gov"' to="/redeem" icon>
+          <v-icon>shopping_cart</v-icon>
+        </v-btn>
+        <v-btn v-if="store.state.user" @click="logout" icon>
+          <v-icon>power_settings_new</v-icon>
+        </v-btn>
+
+        <!-- <v-btn to="/">Home</v-btn>
+        <v-btn to="/about">About</v-btn> -->
+        <!-- <v-toolbar app>
+          <v-toolbar-title>Template</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn flat to="/">Home</v-btn>
+            <v-btn flat to="/about">About</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <router-view></router-view> -->
+      </v-app-bar>
+
+      <v-content>
+        <v-progress-linear indeterminate v-show="store.state.progressShow" color="orange darken-2" fixed></v-progress-linear>
+        <!-- <v-container fluid fill-height>
+          <v-layout align-center justify-center>
+            <v-flex text-xs-center>
+              <router-view></router-view>
+            </v-flex>
+          </v-layout>
+        </v-container> -->
+        <router-view></router-view>
+
+
+      </v-content>
+    </v-app>
+  </div>
+
+
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vuetify/dist/vuetify.min.js"></script>
+  <script src="node_modules/vue-router/dist/vue-router.min.js"></script>
+  <script src='js/main.js'></script>
+</body>
+
+</html>

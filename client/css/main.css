@@ -1,0 +1,9 @@
+html {
+    overflow-y: auto
+}
+
+#title {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
