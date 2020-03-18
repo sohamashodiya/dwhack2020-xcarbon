@@ -27,4 +27,4 @@ https://medium.com/algorand/building-on-algorand-developer-week-2020-hackathon-r
 
 ## Video Demonstration
 
-[![Video](https://i.imgur.com/4D5ac7q.png)](https://www.youtube.com/watch?v=Tnmf1Bbj8VE)
+[![Video](https://i.imgur.com/ioKgkwR.png)](https://www.youtube.com/watch?v=Tnmf1Bbj8VE)
